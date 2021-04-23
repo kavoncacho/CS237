@@ -1,0 +1,37 @@
+;Name: Kavon Cacho
+;RedID: 822794135
+;Class: TTH 8am
+.386
+.model flat, stdcall
+.stack 4096
+include Irvine32.inc
+ExitProcess proto, dwExitCode : dword
+
+.data 
+array BYTE 1, 2, 3, 4, 5, 6
+
+.code 
+main PROC
+
+mov esi,0		;initialize registers with zero
+mov edi,0		;initialize registers with zero
+mov esi,OFFSET array		;move the first element into esi
+mov edi,OFFSET array + SIZEOF array - TYPE array		;move the last element into edi
+mov ecx, LENGTHOF array / 2		;set amount of loops in loop counter register ecx
+
+shloop:
+	mov ah,[esi]		;move memory address of the first element into ah
+	xchg ah,[edi]		;exchange memory addresses of the first element with the last element 
+	mov [esi],ah		;move contents of ah (edi) into the memory address of the first element
+	inc esi		;increment esi to move up an element
+	dec edi		;decrement edi to move down an element
+loop shloop		;loop until all pairs of elements have been swapped
+
+mov esi,OFFSET array			
+mov ecx,LENGTHOF array			
+mov ebx,TYPE array				
+call DumpMem			;lines 30-32 are neccessary for DumpMem to work			
+
+invoke ExitProcess,0
+main endp
+end main
